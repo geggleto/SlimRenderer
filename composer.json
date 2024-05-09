@@ -38,7 +38,12 @@
         }
     },
     "scripts": {
-        "test": "phpunit --configuration phpunit.xml.dist",
+        "test": [
+            "@phpcs",
+            "@phpunit"
+        ],
+        "phpunit": "phpunit",
+        "phpcs": "phpcs",
         "test:coverage": "phpunit --configuration phpunit.xml.dist --coverage-clover build/logs/clover.xml --coverage-html build/coverage"
     },
     "config": {
