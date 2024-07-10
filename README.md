@@ -1,4 +1,7 @@
-[![Build Status](https://travis-ci.org/geggleto/PHP-View.svg?branch=master)](https://travis-ci.org/geggleto/PHP-View)
+
+[![Build Status](https://github.com/slimphp/PHP-View/actions/workflows/tests.yml/badge.svg?branch=3.x)](https://github.com/slimphp/PHP-View/actions)
+[![Latest Stable Version](https://poser.pugx.org/slim/PHP-View/v)](https://packagist.org/packages/slim/PHP-View)
+[![License](https://poser.pugx.org/slim/PHP-View/license)](https://packagist.org/packages/slim/PHP-View)
 
 ## PHP Renderer
 
@@ -14,8 +17,9 @@ Note that PHP-View has no built-in mitigation from XSS attacks. It is the develo
 
 Install with [Composer](http://getcomposer.org):
 
-    composer require slim/php-view
-
+```
+composer require slim/php-view
+```
 
 ## Usage with Slim 4
 
@@ -37,6 +41,7 @@ $app->run();
 Note that you could place the PhpRenderer instantiation within your DI Container. 
 
 ## Usage with any PSR-7 Project
+
 ```php
 //Construct the View
 $phpView = new PhpRenderer("path/to/templates");
@@ -63,6 +68,7 @@ $phpView->addAttribute($key, $value);
 ```
 
 Data passed in via `->render()` takes precedence over attributes.
+
 ```php
 $templateVariables = [
     "title" => "Title"
@@ -78,7 +84,9 @@ $phpView->render($response, $template, [
 ```
 
 ## Sub-templates
-Inside your templates you may use `$this` to refer to the PhpRenderer object to render sub-templates. If using a layout the `fetch()` method can be used instead of `render()` to avoid appling the layout to the sub-template.
+
+Inside your templates you may use `$this` to refer to the PhpRenderer object to render sub-templates. 
+If using a layout the `fetch()` method can be used instead of `render()` to avoid appling the layout to the sub-template.
 
 ```phtml
 <?=$this->fetch('./path/to/partial.phtml', ["name" => "John"])?>
