@@ -1,7 +1,7 @@
 
 [![Latest Version on Packagist](https://img.shields.io/github/release/slimphp/php-view.svg)](https://packagist.org/packages/slim/PHP-View)
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE.md)
-[![Build Status](https://github.com/slimphp/PHP-View/actions/workflows/tests.yml/badge.svg?branch=3.x)](https://github.com/slimphp/PHP-View/actions)
+[![Build Status](https://github.com/slimphp/PHP-View/actions/workflows/build.yml/badge.svg?branch=3.x)](https://github.com/slimphp/PHP-View/actions)
 [![Total Downloads](https://img.shields.io/packagist/dt/slim/PHP-View.svg)](https://packagist.org/packages/slim/PHP-View/stats)
 
 

@@ -1,52 +1,56 @@
 {
-    "name": "slim/php-view",
-    "type": "library",
-    "description": "Render PHP view scripts into a PSR-7 Response object.",
-    "keywords": [
-        "slim",
-        "framework",
-        "view",
-        "template",
-        "php",
-        "phtml",
-        "renderer"
-    ],
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Glenn Eggleton",
-            "email": "geggleto@gmail.com"
-        }
-    ],
-    "require": {
-        "php": "^7.4 || ^8.0",
-        "psr/http-message": "^1.1"
-    },
-    "require-dev": {
-        "phpunit/phpunit": "^9.6",
-        "slim/psr7": "^1.6",
-        "squizlabs/php_codesniffer": "^3.10"
-    },
-    "autoload": {
-        "psr-4": {
-            "Slim\\Views\\": "src"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "Slim\\Tests\\": "tests"
-        }
-    },
-    "scripts": {
-        "test": [
-            "@phpcs",
-            "@phpunit"
-        ],
-        "phpunit": "phpunit",
-        "phpcs": "phpcs",
-        "test:coverage": "phpunit --configuration phpunit.xml.dist --coverage-clover build/logs/clover.xml --coverage-html build/coverage"
-    },
-    "config": {
-        "sort-packages": true
+  "name": "slim/php-view",
+  "description": "Render PHP view scripts into a PSR-7 Response object.",
+  "license": "MIT",
+  "type": "library",
+  "keywords": [
+    "slim",
+    "framework",
+    "view",
+    "template",
+    "php",
+    "phtml",
+    "renderer"
+  ],
+  "authors": [
+    {
+      "name": "Glenn Eggleton",
+      "email": "geggleto@gmail.com"
     }
+  ],
+  "require": {
+    "php": "^7.4 || ^8.0",
+    "psr/http-message": "^1.1"
+  },
+  "require-dev": {
+    "phpstan/phpstan": "^1",
+    "phpunit/phpunit": "^9",
+    "slim/psr7": "^1.6",
+    "squizlabs/php_codesniffer": "^3.10"
+  },
+  "autoload": {
+    "psr-4": {
+      "Slim\\Views\\": "src"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Slim\\Tests\\": "tests"
+    }
+  },
+  "config": {
+    "sort-packages": true
+  },
+  "scripts": {
+    "sniffer:check": "phpcs --standard=phpcs.xml",
+    "sniffer:fix": "phpcbf --standard=phpcs.xml",
+    "stan": "phpstan analyse -c phpstan.neon --no-progress --ansi",
+    "test": "phpunit --configuration phpunit.xml --do-not-cache-result --colors=always",
+    "test:all": [
+      "@sniffer:check",
+      "@stan",
+      "@test"
+    ],
+    "test:coverage": "php -d xdebug.mode=coverage -r \\\"require 'vendor/bin/phpunit';\\\" -- --configuration phpunit.xml --do-not-cache-result --colors=always --coverage-clover build/logs/clover.xml --coverage-html build/coverage"
+  }
 }
