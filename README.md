@@ -12,12 +12,13 @@ This is a renderer for rendering PHP view scripts into a PSR-7 Response object. 
 
 ### Cross-site scripting (XSS) risks
 
-Note that PHP-View has no built-in mitigation from XSS attacks. It is the developer's responsibility to use `htmlspecialchars()` or a component like [laminas-escaper](https://github.com/laminas/laminas-escaper). Alternatively, consider  [Twig-View](https://github.com/slimphp/Twig-View).
-
+Note that PHP-View has no built-in mitigation from XSS attacks. 
+It is the developer's responsibility to use `htmlspecialchars()` 
+or a component like [laminas-escaper](https://github.com/laminas/laminas-escaper). Alternatively, consider  [Twig-View](https://github.com/slimphp/Twig-View).
 
 ## Installation
 
-Install with [Composer](http://getcomposer.org):
+Install with Composer:
 
 ```
 composer require slim/php-view
@@ -28,13 +29,14 @@ composer require slim/php-view
 ```php
 use Slim\Views\PhpRenderer;
 
-include "vendor/autoload.php";
+include 'vendor/autoload.php';
 
 $app = Slim\AppFactory::create();
 
 $app->get('/hello/{name}', function ($request, $response, $args) {
     $renderer = new PhpRenderer('path/to/templates');
-    return $renderer->render($response, "hello.php", $args);
+    
+    return $renderer->render($response, 'hello.php', $args);
 });
 
 $app->run();
@@ -46,87 +48,134 @@ Note that you could place the PhpRenderer instantiation within your DI Container
 
 ```php
 //Construct the View
-$phpView = new PhpRenderer("path/to/templates");
+$renderer = new PhpRenderer('path/to/templates');
 
-//Render a Template
-$response = $phpView->render(new Response(), "hello.php", $yourData);
+$viewData = [
+    'key1' => 'value1',
+    'key2' => 'value2',
+];
+
+// Render a template
+$response = $renderer->render(new Response(), 'hello.php', $viewData);
 ```
 
 ## Template Variables
+
 You can now add variables to your renderer that will be available to all templates you render.
 
 ```php
-// via the constructor
-$templateVariables = [
-    "title" => "Title"
+// Via the constructor
+$globalViewData = [
+    'title' => 'Title'
 ];
-$phpView = new PhpRenderer("path/to/templates", $templateVariables);
+
+$renderer = new PhpRenderer('path/to/templates', $globalViewData);
 
 // or setter
-$phpView->setAttributes($templateVariables);
+$viewData = [
+    'key1' => 'value1',
+    'key2' => 'value2',
+];
+$renderer->setAttributes($viewData);
 
 // or individually
-$phpView->addAttribute($key, $value);
+$renderer->addAttribute($key, $value);
 ```
 
-Data passed in via `->render()` takes precedence over attributes.
+Data passed in via the `render()` method takes precedence over attributes.
 
 ```php
-$templateVariables = [
-    "title" => "Title"
+$viewData = [
+    'title' => 'Title'
 ];
-$phpView = new PhpRenderer("path/to/templates", $templateVariables);
+$renderer = new PhpRenderer('path/to/templates', $viewData);
 
 //...
 
-$phpView->render($response, $template, [
-    "title" => "My Title"
+$response = $renderer->render($response, $template, [
+    'title' => 'My Title'
 ]);
+
 // In the view above, the $title will be "My Title" and not "Title"
 ```
 
 ## Sub-templates
 
 Inside your templates you may use `$this` to refer to the PhpRenderer object to render sub-templates. 
-If using a layout the `fetch()` method can be used instead of `render()` to avoid appling the layout to the sub-template.
+If using a layout the `fetch()` method can be used instead of `render()` to avoid applying the layout to the sub-template.
 
-```phtml
-<?=$this->fetch('./path/to/partial.phtml', ["name" => "John"])?>
+```php
+<?=$this->fetch('./path/to/partial.phtml', ['name' => 'John'])?>
 ```
 
 ## Rendering in Layouts
-You can now render view in another views called layouts, this allows you to compose modular view templates
+
+You can now render view in another views called layouts, 
+this allows you to compose modular view templates
 and help keep your views DRY.
 
-Create your layout `path/to/templates/layout.php`.
-```phtml
+Create your layout `path/to/templates/layout.php`
+
+```php
 <html><head><title><?=$title?></title></head><body><?=$content?></body></html>
 ```
 
-Create your view template `path/to/templates/hello.php`.
-```phtml
+Create your view template `path/to/templates/hello.php`
+
+```php
 Hello <?=$name?>!
 ```
 
 Rendering in your code.
+
 ```php
-$phpView = new PhpRenderer("path/to/templates", ["title" => "My App"]);
-$phpView->setLayout("layout.php");
+$renderer = new PhpRenderer('path/to/templates', ['title' => 'My App']);
+$renderer->setLayout('layout.php');
+
+$viewData = [
+    'title' => 'Hello - My App',
+    'name' => 'John',
+];
 
 //...
 
-$phpview->render($response, "hello.php", ["title" => "Hello - My App", "name" => "John"]);
+$response = $renderer->render($response, 'hello.php', $viewData);
 ```
 
 Response will be
+
 ```html
 <html><head><title>Hello - My App</title></head><body>Hello John!</body></html>
 ```
 
-Please note, the $content is special variable used inside layouts to render the wrapped view and should not be set
-in your view paramaters.
+Please note, the `$content` is special variable used inside layouts 
+to render the wrapped view and should not be set in your view parameters.
+
+## Escaping values
+
+It's essential to ensure that the HTML output is secure to 
+prevent common web vulnerabilities like Cross-Site Scripting (XSS).
+This package has no built-in mitigation from XSS attacks.
+
+The following function uses the `htmlspecialchars` function 
+with specific flags to ensure proper encoding:
+
+```php
+function html(string $text = null): string
+{
+    return htmlspecialchars($text, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+}
+```
+
+You could consider setting it up as a global function in [composer.json](https://getcomposer.org/doc/04-schema.md#files).
+
+**Usage**
+
+```php
+Hello <?= html($name) ?>
+```
 
 ## Exceptions
-`\RuntimeException` - if template does not exist
 
-`\InvalidArgumentException` - if $data contains 'template'
+* `\RuntimeException` - If template does not exist
+* `\InvalidArgumentException` - If $data contains 'template'
