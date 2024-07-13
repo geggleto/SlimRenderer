@@ -27,22 +27,42 @@ composer require slim/php-view
 ## Usage with Slim 4
 
 ```php
+use Slim\AppFactory;
 use Slim\Views\PhpRenderer;
 
 include 'vendor/autoload.php';
 
-$app = Slim\AppFactory::create();
+$app = AppFactory::create();
 
-$app->get('/hello/{name}', function ($request, $response, $args) {
+$app->get('/hello/{name}', function ($request, $response) {
     $renderer = new PhpRenderer('path/to/templates');
     
-    return $renderer->render($response, 'hello.php', $args);
+    return $renderer->render($response, 'hello.php');
 });
 
 $app->run();
 ```
 
-Note that you could place the PhpRenderer instantiation within your DI Container. 
+## DI Container Setup
+
+You can place the `PhpRenderer` instantiation within your DI Container.
+
+```php
+<?php
+
+use Psr\Container\ContainerInterface;
+use Slim\Views\PhpRenderer;
+// ...
+
+return [
+    PhpRenderer::class => function (ContainerInterface $container) {
+        $renderer = new PhpRenderer('path/to/templates');
+
+        return $renderer;
+    },
+];
+
+```
 
 ## Usage with any PSR-7 Project
 
