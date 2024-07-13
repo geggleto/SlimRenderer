@@ -18,6 +18,7 @@ use Slim\Psr7\Stream;
 use Slim\Views\Exception\PhpTemplateNotFoundException;
 use Slim\Views\PhpRenderer;
 use Throwable;
+use UnexpectedValueException;
 
 class PhpRendererTest extends TestCase
 {
@@ -25,7 +26,7 @@ class PhpRendererTest extends TestCase
     {
         $renderer = new PhpRenderer(__DIR__ . '/_files/');
         $headers = new Headers();
-        $body = new Stream(fopen('php://temp', 'r+'));
+        $body = $this->createStream();
         $response = new Response(200, $headers, $body);
         $newResponse = $renderer->render($response, 'template.phtml', ['hello' => 'Hi']);
         $newResponse->getBody()->rewind();
@@ -36,7 +37,7 @@ class PhpRendererTest extends TestCase
     {
         $renderer = new PhpRenderer(__DIR__ . '/_files');
         $headers = new Headers();
-        $body = new Stream(fopen('php://temp', 'r+'));
+        $body = $this->createStream();
         $response = new Response(200, $headers, $body);
         $newResponse = $renderer->render($response, 'template.phtml', ['hello' => 'Hi']);
         $newResponse->getBody()->rewind();
@@ -49,7 +50,7 @@ class PhpRendererTest extends TestCase
             'hello' => 'Hello'
         ]);
         $headers = new Headers();
-        $body = new Stream(fopen('php://temp', 'r+'));
+        $body = $this->createStream();
         $response = new Response(200, $headers, $body);
         $newResponse = $renderer->render($response, 'template.phtml', [
             'hello' => 'Hi'
@@ -62,7 +63,7 @@ class PhpRendererTest extends TestCase
     {
         $renderer = new PhpRenderer(__DIR__ . '/_files/');
         $headers = new Headers();
-        $body = new Stream(fopen('php://temp', 'r+'));
+        $body = $this->createStream();
         $response = new Response(200, $headers, $body);
         try {
             $newResponse = $renderer->render($response, 'exception_layout.phtml');
@@ -81,7 +82,7 @@ class PhpRendererTest extends TestCase
     {
         $renderer = new PhpRenderer(__DIR__ . '/_files/');
         $headers = new Headers();
-        $body = new Stream(fopen('php://temp', 'r+'));
+        $body = $this->createStream();
         $response = new Response(200, $headers, $body);
         $this->expectException(InvalidArgumentException::class);
         $renderer->render($response, 'template.phtml', [
@@ -93,7 +94,7 @@ class PhpRendererTest extends TestCase
     {
         $renderer = new PhpRenderer(__DIR__ . '/_files/');
         $headers = new Headers();
-        $body = new Stream(fopen('php://temp', 'r+'));
+        $body = $this->createStream();
         $response = new Response(200, $headers, $body);
         $this->expectException(PhpTemplateNotFoundException::class);
         $renderer->render($response, 'adfadftemplate.phtml', []);
@@ -104,7 +105,7 @@ class PhpRendererTest extends TestCase
         $renderer = new PhpRenderer(__DIR__ . '/_files/', ['title' => 'My App']);
         $renderer->setLayout('layout.phtml');
         $headers = new Headers();
-        $body = new Stream(fopen('php://temp', 'r+'));
+        $body = $this->createStream();
         $response = new Response(200, $headers, $body);
         $newResponse = $renderer->render($response, 'template.phtml', ['title' => 'Hello - My App', 'hello' => 'Hi']);
         $newResponse->getBody()->rewind();
@@ -119,7 +120,7 @@ class PhpRendererTest extends TestCase
     {
         $renderer = new PhpRenderer(__DIR__ . '/_files', ['title' => 'My App'], 'layout.phtml');
         $headers = new Headers();
-        $body = new Stream(fopen('php://temp', 'r+'));
+        $body = $this->createStream();
         $response = new Response(200, $headers, $body);
         $newResponse = $renderer->render($response, 'template.phtml', ['title' => 'Hello - My App', 'hello' => 'Hi']);
         $newResponse->getBody()->rewind();
@@ -135,7 +136,7 @@ class PhpRendererTest extends TestCase
         $renderer = new PhpRenderer(__DIR__ . '/_files/');
         $renderer->setLayout('exception_layout.phtml');
         $headers = new Headers();
-        $body = new Stream(fopen('php://temp', 'r+'));
+        $body = $this->createStream();
         $response = new Response(200, $headers, $body);
         try {
             $newResponse = $renderer->render($response, 'template.phtml');
@@ -164,7 +165,7 @@ class PhpRendererTest extends TestCase
         $renderer = new PhpRenderer(__DIR__ . '/_files/');
         $renderer->setLayout('layout.phtml');
         $headers = new Headers();
-        $body = new Stream(fopen('php://temp', 'r+'));
+        $body = $this->createStream();
         $response = new Response(200, $headers, $body);
         $newResponse = $renderer->render(
             $response,
@@ -184,5 +185,15 @@ class PhpRendererTest extends TestCase
         $renderer = new PhpRenderer(__DIR__ . '/_files/');
         $this->assertTrue($renderer->templateExists('layout.phtml'));
         $this->assertFalse($renderer->templateExists('non-existant-template'));
+    }
+
+    private function createStream(): Stream
+    {
+        $resource = fopen('php://temp', 'r+');
+        if ($resource === false) {
+            throw new UnexpectedValueException();
+        }
+
+        return new Stream($resource);
     }
 }
