@@ -19,13 +19,16 @@ class PhpRenderer
 {
     protected string $templatePath;
 
+    /**
+     * @var array<string, mixed>
+     */
     protected array $attributes;
 
     protected string $layout;
 
     /**
      * @param string $templatePath
-     * @param array  $attributes
+     * @param array<string, mixed> $attributes
      * @param string $layout
      */
     public function __construct(string $templatePath = '', array $attributes = [], string $layout = '')
@@ -37,12 +40,12 @@ class PhpRenderer
 
     /**
      * @param ResponseInterface $response
-     * @param string            $template
-     * @param array             $data
-     *
-     * @return ResponseInterface
+     * @param string $template
+     * @param array<string, mixed> $data
      *
      * @throws Throwable
+     *
+     * @return ResponseInterface
      */
     public function render(ResponseInterface $response, string $template, array $data = []): ResponseInterface
     {
@@ -61,14 +64,10 @@ class PhpRenderer
 
     /**
      * @param string $layout
-     */
-
-    /**
-     * @param string $layout
-     *
-     * @return void
      *
      * @throws PhpTemplateNotFoundException
+     *
+     * @return void
      */
     public function setLayout(string $layout): void
     {
@@ -80,7 +79,7 @@ class PhpRenderer
     }
 
     /**
-     * @return array
+     * @return array<string, mixed>
      */
     public function getAttributes(): array
     {
@@ -88,7 +87,7 @@ class PhpRenderer
     }
 
     /**
-     * @param array $attributes
+     * @param array<string, mixed> $attributes
      *
      * @return void
      */
@@ -99,7 +98,7 @@ class PhpRenderer
 
     /**
      * @param string $key
-     * @param        $value
+     * @param mixed $value
      *
      * @return void
      */
@@ -140,12 +139,12 @@ class PhpRenderer
 
     /**
      * @param string $template
-     * @param array  $data
-     * @param bool   $useLayout
-     *
-     * @return string
+     * @param array<string, mixed> $data
+     * @param bool $useLayout
      *
      * @throws Throwable
+     *
+     * @return string
      */
     public function fetch(string $template, array $data = [], bool $useLayout = false): string
     {
@@ -160,11 +159,11 @@ class PhpRenderer
 
     /**
      * @param string $template
-     * @param array  $data
-     *
-     * @return string
+     * @param array<string, mixed> $data
      *
      * @throws Throwable
+     *
+     * @return string
      */
     public function fetchTemplate(string $template, array $data = []): string
     {
@@ -173,8 +172,9 @@ class PhpRenderer
         }
 
         if (!$this->templateExists($template)) {
-            throw new PhpTemplateNotFoundException('View cannot render "' . $template
-                                                   . '" because the template does not exist');
+            throw new PhpTemplateNotFoundException(
+                'View cannot render "' . $template . '" because the template does not exist'
+            );
         }
 
         $data = array_merge($this->attributes, $data);
@@ -205,7 +205,7 @@ class PhpRenderer
 
     /**
      * @param string $template
-     * @param array  $data
+     * @param array<string, mixed> $data
      *
      * @return void
      */

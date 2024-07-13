@@ -45,7 +45,6 @@ class PhpRendererTest extends TestCase
 
     public function testAttributeMerging(): void
     {
-
         $renderer = new PhpRenderer(__DIR__ . '/_files/', [
             'hello' => 'Hello'
         ]);
@@ -68,7 +67,7 @@ class PhpRendererTest extends TestCase
         try {
             $newResponse = $renderer->render($response, 'exception_layout.phtml');
         } catch (Throwable $t) {
-        // Simulates an error template
+            // Simulates an error template
             $newResponse = $renderer->render($response, 'template.phtml', [
                 'hello' => 'Hi'
             ]);
@@ -109,8 +108,11 @@ class PhpRendererTest extends TestCase
         $response = new Response(200, $headers, $body);
         $newResponse = $renderer->render($response, 'template.phtml', ['title' => 'Hello - My App', 'hello' => 'Hi']);
         $newResponse->getBody()->rewind();
-        $this->assertEquals('<html><head><title>Hello - My App</title></head><body>Hi<footer>This is the footer'
-                            . '</footer></body></html>', $newResponse->getBody()->getContents());
+        $this->assertEquals(
+            '<html><head><title>Hello - My App</title></head><body>Hi<footer>This is the footer'
+            . '</footer></body></html>',
+            $newResponse->getBody()->getContents()
+        );
     }
 
     public function testLayoutConstructor(): void
@@ -121,8 +123,11 @@ class PhpRendererTest extends TestCase
         $response = new Response(200, $headers, $body);
         $newResponse = $renderer->render($response, 'template.phtml', ['title' => 'Hello - My App', 'hello' => 'Hi']);
         $newResponse->getBody()->rewind();
-        $this->assertEquals('<html><head><title>Hello - My App</title></head><body>Hi<footer>This is the footer'
-                            . '</footer></body></html>', $newResponse->getBody()->getContents());
+        $this->assertEquals(
+            '<html><head><title>Hello - My App</title></head><body>Hi<footer>This is the footer'
+            . '</footer></body></html>',
+            $newResponse->getBody()->getContents()
+        );
     }
 
     public function testExceptionInLayout(): void
@@ -135,7 +140,7 @@ class PhpRendererTest extends TestCase
         try {
             $newResponse = $renderer->render($response, 'template.phtml');
         } catch (Throwable $t) {
-        // PHP 7+
+            // PHP 7+
             // Simulates an error template
             $renderer->setLayout('');
             $newResponse = $renderer->render($response, 'template.phtml', [
@@ -167,11 +172,14 @@ class PhpRendererTest extends TestCase
             ['title' => 'Hello - My App', 'hello' => 'Hi', 'content' => 'Ho']
         );
         $newResponse->getBody()->rewind();
-        $this->assertEquals('<html><head><title>Hello - My App</title></head><body>Hi<footer>This is the footer'
-                            . '</footer></body></html>', $newResponse->getBody()->getContents());
+        $this->assertEquals(
+            '<html><head><title>Hello - My App</title></head><body>Hi<footer>This is the footer'
+            . '</footer></body></html>',
+            $newResponse->getBody()->getContents()
+        );
     }
 
-    public function testTemplateExists()
+    public function testTemplateExists(): void
     {
         $renderer = new PhpRenderer(__DIR__ . '/_files/');
         $this->assertTrue($renderer->templateExists('layout.phtml'));
