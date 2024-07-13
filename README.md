@@ -45,14 +45,18 @@ $response = $renderer->render(new Response(), 'hello.php', $viewData);
 use Slim\AppFactory;
 use Slim\Views\PhpRenderer;
 
-include 'vendor/autoload.php';
+require __DIR__ . '/../vendor/autoload.php';
 
 $app = AppFactory::create();
 
-$app->get('/hello/{name}', function ($request, $response) {
+$app->get('/hello', function ($request, $response) {
     $renderer = new PhpRenderer('path/to/templates');
     
-    return $renderer->render($response, 'hello.php');
+    $viewData = [
+        'name' => 'John',
+    ];
+    
+    return $renderer->render($response, 'hello.php', $viewData);
 });
 
 $app->run();
