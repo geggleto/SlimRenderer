@@ -199,5 +199,7 @@ Hello <?= html($name) ?>
 
 ## Exceptions
 
-* `\RuntimeException` - If template does not exist
+* `\Slim\Views\Exception\PhpTemplateNotFoundException` - If template layout does not exist
+* `\Slim\Views\Exception\PhpTemplateNotFoundException` - If template does not exist
+* `\RuntimeException` - If the template output could not be fetched
 * `\InvalidArgumentException` - If $data contains 'template'
