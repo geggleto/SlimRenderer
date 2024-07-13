@@ -12,6 +12,7 @@ namespace Slim\Views;
 
 use InvalidArgumentException;
 use Psr\Http\Message\ResponseInterface;
+use RuntimeException;
 use Slim\Views\Exception\PhpTemplateNotFoundException;
 use Throwable;
 
@@ -182,6 +183,9 @@ class PhpRenderer
             ob_start();
             $this->protectedIncludeScope($this->templatePath . $template, $data);
             $output = ob_get_clean();
+            if ($output === false) {
+                throw new RuntimeException('Failed to fetch the template output');
+            }
         } catch (Throwable $e) {
             ob_end_clean();
             throw $e;
