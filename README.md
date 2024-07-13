@@ -24,6 +24,21 @@ Install with Composer:
 composer require slim/php-view
 ```
 
+## Usage with any PSR-7 Project
+
+```php
+//Construct the View
+$renderer = new PhpRenderer('path/to/templates');
+
+$viewData = [
+    'key1' => 'value1',
+    'key2' => 'value2',
+];
+
+// Render a template
+$response = $renderer->render(new Response(), 'hello.php', $viewData);
+```
+
 ## Usage with Slim 4
 
 ```php
@@ -62,21 +77,6 @@ return [
     },
 ];
 
-```
-
-## Usage with any PSR-7 Project
-
-```php
-//Construct the View
-$renderer = new PhpRenderer('path/to/templates');
-
-$viewData = [
-    'key1' => 'value1',
-    'key2' => 'value2',
-];
-
-// Render a template
-$response = $renderer->render(new Response(), 'hello.php', $viewData);
 ```
 
 ## Template Variables
