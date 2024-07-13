@@ -18,8 +18,6 @@ or a component like [laminas-escaper](https://github.com/laminas/laminas-escaper
 
 ## Installation
 
-Install with Composer:
-
 ```
 composer require slim/php-view
 ```
