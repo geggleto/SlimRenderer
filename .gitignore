@@ -1,7 +1,18 @@
-.DS_Store
+# Composer
 composer.lock
-vendor
-.idea
-composer.phar
+/vendor
+
+# PHPUnit
+/.phpunit.cache
 .phpunit.result.cache
-build/
+
+# IDEs
+/.fleet
+/.idea
+/.vscode
+
+# Build artifacts and temporary files
+.DS_Store
+clover.xml
+/build
+/coverage
