@@ -183,9 +183,9 @@ The following function uses the `htmlspecialchars` function
 with specific flags to ensure proper encoding:
 
 ```php
-function html(string $text = null): string
+function html(?string $text = null): string
 {
-    return htmlspecialchars($text, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+    return htmlspecialchars($text ?? '', ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
 }
 ```
 
